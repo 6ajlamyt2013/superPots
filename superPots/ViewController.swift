@@ -12,9 +12,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        NetworkLayer.registrClient(name: "wewe", email: "pushwockest.ru", password: "Qwerty", pot: 7, method: "reg")
     }
-
-
 }
 
