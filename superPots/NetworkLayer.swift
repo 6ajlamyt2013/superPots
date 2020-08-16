@@ -1,7 +1,5 @@
 import Foundation
 import Alamofire
-import SwiftyJSON
-
 
 class NetworkLayer {
     
@@ -31,21 +29,6 @@ class NetworkLayer {
                 case .failure(let error):
                     print(error)
                 }
-                
-                
-                // methoad use respons and SwiftyJSON
-                //                switch response.result {
-                //
-                //                case .success(let value):
-                //                    let json = JSON(value)
-                //                    debugPrint(json)
-                //                    if let session = json["session"].string {
-                //                        debugPrint(session)
-                //                    }
-                //
-                //                case .failure(let error):
-                //                    print(error)
-                //                }
         }
     }
 }
