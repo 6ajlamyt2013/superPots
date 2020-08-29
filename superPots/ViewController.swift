@@ -4,13 +4,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     let subview: UIScrollView = {
         let view = UIScrollView()
+        view.backgroundColor = .red
         return view
+    }()
+    
+    let contentView: UIView  = {
+        let contentView = UIView()
+        return contentView
     }()
     
     lazy var logoView: UIImageView = {
         let img = UIImageView()
         img.image = UIImage.init(named: "jungle.png")
-        img.backgroundColor = .red
         img.clipsToBounds = true
         img.layer.masksToBounds = true
         img.contentMode = .scaleAspectFill
@@ -39,7 +44,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     let enterButton: UIButton = {
         let btn = UIButton()
-        btn.layer.cornerRadius = 33
+        btn.layer.cornerRadius = 25
         btn.backgroundColor = UIColor(red: 49, green: 159, blue: 94)
         btn.setTitle("Войти", for: .normal)
         btn.setTitleColor(.white, for: .normal)
@@ -47,52 +52,77 @@ class ViewController: UIViewController, UITextFieldDelegate {
         return btn
     }()
     
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
-        self.view.addSubview(subview)
-        self.view.addSubview(logoView)
-        self.view.addSubview(emailTextField)
-        self.view.addSubview(passwordSecureField)
-        self.view.addSubview(enterButton)
+        
+        let tap = UITapGestureRecognizer(target: self.view , action: #selector(UIView.endEditing))
+        
+        let testStek = UIStackView()
+        testStek.alignment = .center
+        testStek.addArrangedSubview(logoView)
+        testStek.addArrangedSubview(emailTextField)
+        testStek.addArrangedSubview(logoView)
+        
+        view.addGestureRecognizer(tap)
+        view.addSubview(subview)
+        self.subview.addSubview(contentView)
+        self.subview.addSubview(logoView)
+        self.subview.addSubview(emailTextField)
+        self.subview.addSubview(passwordSecureField)
+        self.subview.addSubview(enterButton)
+        
         
         emailTextField.delegate = self
         passwordSecureField.delegate = self
         
         subview.snp.makeConstraints { (make) in
-            make.edges.equalTo(view).inset(UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0))
-            make.leading.trailing.equalToSuperview()
-            make.bottom.equalTo(view.safeArea.bottom)
+            make.edges.equalTo(view.safeAreaLayoutGuide)
         }
         
-        logoView.snp.makeConstraints { (make) -> Void in
-            make.edges.equalTo(view).inset(UIEdgeInsets(top: 60, left: 20, bottom: 350, right: 20))
+        contentView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
         }
+        
+        logoView.snp.makeConstraints { (make) in
+            make.top.equalToSuperview().inset(60)
+            make.height.equalTo(view).multipliedBy(0.6)
+            make.trailing.leading.equalTo(view)
+        }
+        
         emailTextField.snp.makeConstraints { (make) -> Void in
-            make.edges.equalTo(view).inset(UIEdgeInsets(top: 520, left: 60, bottom: 320, right: 60))
+            make.top.equalTo(logoView.snp.bottom).offset(0)
+            make.left.equalTo(subview.snp.left).inset(60)
+            make.leading.trailing.equalToSuperview()
         }
         
         passwordSecureField.snp.makeConstraints { (make) -> Void in
-            make.edges.equalTo(view).inset(UIEdgeInsets(top: 610, left: 60, bottom: 230, right: 60))
+            make.top.equalTo(emailTextField.snp.bottom).offset(40)
+            make.left.equalTo(subview.snp.left).inset(60)
+            make.leading.trailing.equalToSuperview()
         }
         
-        //на SE не видно кнопки
         enterButton.snp.makeConstraints { (make) -> Void in
-            make.edges.equalTo(view).inset(UIEdgeInsets(top: 700, left: 60, bottom: 130, right: 60))
+            make.top.equalTo(passwordSecureField.snp.bottom).offset(60)
+            make.left.right.equalTo(view).inset(60)
+            make.height.equalTo(55)
         }
         
-        let tap = UITapGestureRecognizer(target: self.view , action: #selector(UIView.endEditing))
-        view.addGestureRecognizer(tap)
-        
+        enterButton.addTarget(self, action: #selector(didTapOnEnterButton), for: .touchUpInside)
     }
     
-    
+    @objc
+    func didTapOnEnterButton() {
+        let secondViewController:HoumViewController = HoumViewController()
+        self.present(secondViewController, animated: true, completion: nil)
+    }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == emailTextField {
             passwordSecureField.becomeFirstResponder()
         } else if textField == passwordSecureField {
             passwordSecureField.resignFirstResponder()
-            
         }
         return true
     }

@@ -7,9 +7,10 @@ class NetworkLayer {
     
     //нужен enam для методов
     
-    static func registrClient (name: String, email: String, password: String, pot: Int, method: String) {
+    static func authClient (email: String, password: String, method: String = "auth" ) {
         
-        let parametrs: [ String: Any] = ["name": name, "password": password, "pot": pot, "method": method, "email": email]
+        let parametrs: [ String: Any] = ["password": password, "method": method, "email": email]
+        
         
         AF.request(NetworkLayer.baseHost,
                    method: .get,
