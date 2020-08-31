@@ -2,17 +2,12 @@ import SnapKit
 
 class ViewController: UIViewController, UITextFieldDelegate {
     
-    let subview: UIScrollView = {
+    let scrollView: UIScrollView = {
         let view = UIScrollView()
-        view.backgroundColor = .red
+        view.keyboardDismissMode = .interactive
+        view.showsVerticalScrollIndicator = false
         return view
     }()
-    
-    let contentView: UIView  = {
-        let contentView = UIView()
-        return contentView
-    }()
-    
     lazy var logoView: UIImageView = {
         let img = UIImageView()
         img.image = UIImage.init(named: "jungle.png")
@@ -22,7 +17,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         img.isHighlighted = true
         return img
     }()
-    
     let emailTextField: UITextField = {
         let email = UITextField()
         email.placeholder = "Введите ваш email"
@@ -31,7 +25,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         email.returnKeyType = UIReturnKeyType.next
         return email
     }()
-    
     let passwordSecureField: UITextField = {
         let pwd = UITextField()
         pwd.placeholder = "Введите ваш пароль"
@@ -41,81 +34,114 @@ class ViewController: UIViewController, UITextFieldDelegate {
         pwd.returnKeyType = UIReturnKeyType.done
         return pwd
     }()
-    
     let enterButton: UIButton = {
         let btn = UIButton()
-        btn.layer.cornerRadius = 25
         btn.backgroundColor = UIColor(red: 49, green: 159, blue: 94)
         btn.setTitle("Войти", for: .normal)
         btn.setTitleColor(.white, for: .normal)
         btn.layer.opacity = 0.7
+        
         return btn
     }()
-    
-    
+    let mainStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 20
+        return stack
+    }()
+    let fieldsStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 40
+        return stack
+    }()
+    let subStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 60
+        stack.layoutMargins = UIEdgeInsets(top: 0, left: 60, bottom: 0, right: 60)
+        stack.isLayoutMarginsRelativeArrangement = true
+        return stack
+    }()
     override func viewDidLoad() {
-        
         super.viewDidLoad()
-        
-        let tap = UITapGestureRecognizer(target: self.view , action: #selector(UIView.endEditing))
-        
-        let testStek = UIStackView()
-        testStek.alignment = .center
-        testStek.addArrangedSubview(logoView)
-        testStek.addArrangedSubview(emailTextField)
-        testStek.addArrangedSubview(logoView)
-        
-        view.addGestureRecognizer(tap)
-        view.addSubview(subview)
-        self.subview.addSubview(contentView)
-        self.subview.addSubview(logoView)
-        self.subview.addSubview(emailTextField)
-        self.subview.addSubview(passwordSecureField)
-        self.subview.addSubview(enterButton)
-        
         
         emailTextField.delegate = self
         passwordSecureField.delegate = self
         
-        subview.snp.makeConstraints { (make) in
+        view.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self.view ,
+                action: #selector(UIView.endEditing)
+            )
+        )
+        
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { (make) in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
-        
-        contentView.snp.makeConstraints { (make) in
+        scrollView.addSubview(mainStackView)
+        mainStackView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
         
+        fieldsStackView.addArangedSubviews(
+            emailTextField,
+            passwordSecureField
+        )
+        subStackView.addArangedSubviews(
+            fieldsStackView,
+            enterButton
+        )
+        mainStackView.addArangedSubviews(
+            logoView,
+            subStackView
+        )
+        
         logoView.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().inset(60)
             make.height.equalTo(view).multipliedBy(0.6)
-            make.trailing.leading.equalTo(view)
+            make.width.equalTo(view)
+            
         }
+        enterButton.addTarget(
+            self,
+            action: #selector(didTapOnEnterButton),
+            for: .touchUpInside
+        )
         
-        emailTextField.snp.makeConstraints { (make) -> Void in
-            make.top.equalTo(logoView.snp.bottom).offset(0)
-            make.left.equalTo(subview.snp.left).inset(60)
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        passwordSecureField.snp.makeConstraints { (make) -> Void in
-            make.top.equalTo(emailTextField.snp.bottom).offset(40)
-            make.left.equalTo(subview.snp.left).inset(60)
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        enterButton.snp.makeConstraints { (make) -> Void in
-            make.top.equalTo(passwordSecureField.snp.bottom).offset(60)
-            make.left.right.equalTo(view).inset(60)
-            make.height.equalTo(55)
-        }
-        
-        enterButton.addTarget(self, action: #selector(didTapOnEnterButton), for: .touchUpInside)
+        let notificationCenter = NotificationCenter.default
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    override func viewDidAppear(_ animated: Bool = true) {
+        super.viewDidAppear(animated)
+        enterButton.layer.cornerRadius = enterButton.bounds.height / 2
     }
     
+    @objc func adjustForKeyboard(notification: Notification) {
+        guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        let keyboardScreenEndFrame = keyboardValue.cgRectValue
+        let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame,
+                                                from: view.window)
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            scrollView.contentInset = .zero
+        } else {
+            scrollView.contentInset = UIEdgeInsets(
+                top: 0,
+                left: 0,
+                bottom: (keyboardViewEndFrame.height - view.safeAreaInsets.bottom) + 10,
+                right: 0
+            )
+        }
+        scrollView.scrollIndicatorInsets = scrollView.contentInset
+    }
     @objc
-    func didTapOnEnterButton() {
-        let secondViewController:HoumViewController = HoumViewController()
-        self.present(secondViewController, animated: true, completion: nil)
+    private func didTapOnEnterButton() {
+        let secondViewController = HoumViewController()
+        secondViewController.modalPresentationStyle = .fullScreen
+        present(secondViewController, animated: true, completion: nil)
+        // Заглушка
+        NetworkLayer.authClient()
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -127,19 +153,26 @@ class ViewController: UIViewController, UITextFieldDelegate {
         return true
     }
 }
-
 extension UIView {
     var safeArea : ConstraintLayoutGuideDSL {
         return safeAreaLayoutGuide.snp
     }
 }
-
 extension UIColor {
     convenience init(red: Int, green: Int, blue: Int) {
         assert(red >= 0 && red <= 255, "Invalid red component")
         assert(green >= 0 && green <= 255, "Invalid green component")
         assert(blue >= 0 && blue <= 255, "Invalid blue component")
-        
-        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1.0)
+        self.init(
+            red: CGFloat(red) / 255.0,
+            green: CGFloat(green) / 255.0,
+            blue: CGFloat(blue) / 255.0,
+            alpha: 1.0
+        )
+    }
+}
+extension UIStackView {
+    func addArangedSubviews(_ views: UIView...) {
+        views.forEach(addArrangedSubview)
     }
 }

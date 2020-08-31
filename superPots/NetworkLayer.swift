@@ -7,7 +7,7 @@ class NetworkLayer {
     
     //нужен enam для методов
     
-    static func authClient (email: String, password: String, method: String = "auth" ) {
+    static func authClient (email: String = "Nikolay@gmail.ru", password: String = "test", method: String = "auth" ) {
         
         let parametrs: [ String: Any] = ["password": password, "method": method, "email": email]
         
