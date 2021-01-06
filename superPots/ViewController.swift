@@ -40,7 +40,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         btn.setTitle("Войти", for: .normal)
         btn.setTitleColor(.white, for: .normal)
         btn.layer.opacity = 0.7
-        
         return btn
     }()
     let mainStackView: UIStackView = {
@@ -63,12 +62,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
         stack.isLayoutMarginsRelativeArrangement = true
         return stack
     }()
+    
+    var yOffset: CGFloat = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         emailTextField.delegate = self
         passwordSecureField.delegate = self
         
+        //скрываем клавиатуру по тапу на VC
         view.addGestureRecognizer(
             UITapGestureRecognizer(
                 target: self.view ,
@@ -77,32 +80,37 @@ class ViewController: UIViewController, UITextFieldDelegate {
         )
         
         view.addSubview(scrollView)
+        
         scrollView.snp.makeConstraints { (make) in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
         scrollView.addSubview(mainStackView)
+        
         mainStackView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
         
-        fieldsStackView.addArangedSubviews(
-            emailTextField,
-            passwordSecureField
-        )
-        subStackView.addArangedSubviews(
-            fieldsStackView,
-            enterButton
-        )
         mainStackView.addArangedSubviews(
             logoView,
             subStackView
         )
         
+        fieldsStackView.addArangedSubviews(
+            emailTextField,
+            passwordSecureField
+        )
+        
+        subStackView.addArangedSubviews(
+            fieldsStackView,
+            enterButton
+        )
+        
         logoView.snp.makeConstraints { (make) in
-            make.height.equalTo(view).multipliedBy(0.6)
-            make.width.equalTo(view)
-            
+            make.top.equalTo(mainStackView).offset(30)
+            make.height.equalTo(view).multipliedBy(0.55)
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide).inset(20)
         }
+        
         enterButton.addTarget(
             self,
             action: #selector(didTapOnEnterButton),
@@ -113,6 +121,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
         notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
+    
     override func viewDidAppear(_ animated: Bool = true) {
         super.viewDidAppear(animated)
         enterButton.layer.cornerRadius = enterButton.bounds.height / 2
@@ -135,13 +144,18 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }
         scrollView.scrollIndicatorInsets = scrollView.contentInset
     }
+    
     @objc
     private func didTapOnEnterButton() {
         let secondViewController = HoumViewController()
         secondViewController.modalPresentationStyle = .fullScreen
         present(secondViewController, animated: true, completion: nil)
-        // Заглушка
-        NetworkLayer.authClient()
+        #if DEBUG
+            print("fake session")
+            NetworkLayer.authClient()
+        #else
+            NetworkLayer.authClient(email: emailTextField.text ?? "", password: passwordSecureField.text ?? "", method: "auth")
+        #endif
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -151,28 +165,5 @@ class ViewController: UIViewController, UITextFieldDelegate {
             passwordSecureField.resignFirstResponder()
         }
         return true
-    }
-}
-extension UIView {
-    var safeArea : ConstraintLayoutGuideDSL {
-        return safeAreaLayoutGuide.snp
-    }
-}
-extension UIColor {
-    convenience init(red: Int, green: Int, blue: Int) {
-        assert(red >= 0 && red <= 255, "Invalid red component")
-        assert(green >= 0 && green <= 255, "Invalid green component")
-        assert(blue >= 0 && blue <= 255, "Invalid blue component")
-        self.init(
-            red: CGFloat(red) / 255.0,
-            green: CGFloat(green) / 255.0,
-            blue: CGFloat(blue) / 255.0,
-            alpha: 1.0
-        )
-    }
-}
-extension UIStackView {
-    func addArangedSubviews(_ views: UIView...) {
-        views.forEach(addArrangedSubview)
     }
 }

@@ -18,6 +18,8 @@
 		D36AEF9F24E5CE5500FF86BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D36AEF9D24E5CE5500FF86BB /* LaunchScreen.storyboard */; };
 		D36AEFAA24E5CE5500FF86BB /* superPotsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36AEFA924E5CE5500FF86BB /* superPotsTests.swift */; };
 		D36AEFB524E5CE5500FF86BB /* superPotsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36AEFB424E5CE5500FF86BB /* superPotsUITests.swift */; };
+		D3840254252A6EC800A04E2F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3840253252A6EC800A04E2F /* Extensions.swift */; };
+		D3840256252A70B100A04E2F /* BaseScreenConstarints.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3840255252A70B100A04E2F /* BaseScreenConstarints.swift */; };
 		D3882C4924E5D3A90096A459 /* NetworkLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3882C4824E5D3A90096A459 /* NetworkLayer.swift */; };
 		E711216525532EB827CE305E /* Pods_superPots_superPotsUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD6C16D809B9D42E06F74C44 /* Pods_superPots_superPotsUITests.framework */; };
 /* End PBXBuildFile section */
@@ -61,6 +63,7 @@
 		D36AEFB024E5CE5500FF86BB /* superPotsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = superPotsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D36AEFB424E5CE5500FF86BB /* superPotsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = superPotsUITests.swift; sourceTree = "<group>"; };
 		D36AEFB624E5CE5500FF86BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3840253252A6EC800A04E2F /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		D3882C4824E5D3A90096A459 /* NetworkLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLayer.swift; sourceTree = "<group>"; };
 		DB219A37330DAB264471E3D6 /* Pods-superPotsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-superPotsTests.debug.xcconfig"; path = "Target Support Files/Pods-superPotsTests/Pods-superPotsTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E23F363E461FE72023B4C0F3 /* Pods_superPots.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_superPots.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,6 +149,8 @@
 				D36AEF9224E5CE4C00FF86BB /* AppDelegate.swift */,
 				D36AEF9424E5CE4C00FF86BB /* SceneDelegate.swift */,
 				D36AEF9624E5CE4C00FF86BB /* ViewController.swift */,
+				D3840255252A70B100A04E2F /* BaseScreenConstarints.swift */,
+				D3840253252A6EC800A04E2F /* Extensions.swift */,
 				D315D33D24E8C6AF006BB012 /* HoumViewController.swift */,
 				D36AEF9824E5CE4C00FF86BB /* Main.storyboard */,
 				D36AEF9B24E5CE5500FF86BB /* Assets.xcassets */,
@@ -414,6 +419,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3882C4924E5D3A90096A459 /* NetworkLayer.swift in Sources */,
+				D3840254252A6EC800A04E2F /* Extensions.swift in Sources */,
 				D36AEF9724E5CE4C00FF86BB /* ViewController.swift in Sources */,
 				D315D33E24E8C6AF006BB012 /* HoumViewController.swift in Sources */,
 				D36AEF9324E5CE4C00FF86BB /* AppDelegate.swift in Sources */,
@@ -522,7 +528,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -576,7 +582,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

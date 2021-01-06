@@ -17,6 +17,7 @@ class superPotsUITests: XCTestCase {
         app.secureTextFields.element(boundBy: 0).typeText("test")
         app.buttons["done"].tap()
         app.buttons["Войти"].tap()
-        sleep(20)
+        XCTAssert(app.staticTexts["My Plants"].exists)
+        sleep(10)
     }
 }
